@@ -43,7 +43,12 @@ export const createUpdateQueue = <Action>() => {
 	return updateQueue;
 };
 
-// 消费
+/**
+ * 消费Update 这里主要是对state做计算,得出节点的最终的memoizedState
+ * @param {State} baseState
+ * @param {Update<State> | null} pendingState
+ * @return {{memoizedState: State}}
+ */
 export const processUpdateQueue = <State>(
 	baseState: State,
 	pendingState: Update<State> | null

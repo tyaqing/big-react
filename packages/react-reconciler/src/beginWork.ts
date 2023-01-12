@@ -42,7 +42,7 @@ function updateHostComponent(workInProgress: FiberNode) {
 }
 
 function updateHostRoot(workInProgress: FiberNode) {
-	processUpdateQueue(workInProgress);
+	processUpdateQueue(workInProgress, null);
 	const nextChildren = workInProgress.memoizedState;
 	reconcileChildren(workInProgress, nextChildren);
 	return workInProgress.child;

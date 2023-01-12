@@ -13,8 +13,8 @@ let workInProgress: FiberNode | null = null;
  * @param {FiberNode} fiber
  */
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
+	// 获取Fiber节点的双缓存根节点
 	const root = markUpdateLaneFromFiberToRoot(fiber);
-
 	if (root === null) {
 		return;
 	}
@@ -46,7 +46,7 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 }
 
 function performSyncWorkOnRoot(root: FiberRootNode) {
-	// 初始化操作
+	// 初始化操作 即创建一个新的Fiber根节点
 	prepareFreshStack(root);
 	// render阶段具体操作
 	do {
@@ -62,8 +62,9 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 	if (workInProgress !== null) {
 		console.error('render阶段结束时wip不为null');
 	}
-
+	// 获取current的alternate 即 wip根节点
 	const finishedWork = root.current.alternate;
+	// 将完成的wip节点挂载到current的finishedWork属性上
 	root.finishedWork = finishedWork;
 
 	// commit阶段操作
@@ -109,6 +110,9 @@ function prepareFreshStack(root: FiberRootNode) {
 	workInProgress = createWorkInProgress(root.current, {});
 }
 
+/**
+ * 工作循环,递归遍历workInProgress
+ */
 function workLoop() {
 	while (workInProgress !== null) {
 		performUnitOfWork(workInProgress);
@@ -116,10 +120,10 @@ function workLoop() {
 }
 
 function performUnitOfWork(fiber: FiberNode) {
+	// 递阶段
 	const next = beginWork(fiber);
-
 	if (next === null) {
-		//  完成递归的归
+		//  归阶段
 		completeUnitOfWork(fiber);
 	} else {
 		// 更换指针
