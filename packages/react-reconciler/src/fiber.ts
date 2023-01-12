@@ -1,6 +1,6 @@
 import { Key, Props, ReactElement, Ref } from 'shared/ReactTypes';
 import { Flags, NoFlags } from './fiberFlags';
-import { Container } from './hostConfig';
+import { Container } from 'hostConfig';
 import { FunctionComponent, HostComponent, WorkTag } from './workTags';
 
 export class FiberNode {
@@ -24,24 +24,30 @@ export class FiberNode {
 
 	alternate: FiberNode | null;
 
+	/**
+	 * 构建一个Fiber Node
+	 * @param {WorkTag} tag 节点类型
+	 * @param {Props} pendingProps 组件props参数
+	 * @param {Key} key
+	 */
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
 		// 实例
 		this.tag = tag;
 		this.key = key;
-		this.stateNode = null;
-		this.type = null;
+		this.stateNode = null; // 如HostComponent保存了对应的DOM节点
+		this.type = null; // 如tag为FunctionComponent 则type为这个组件函数本身 function App(){}
 
 		// 树结构
-		this.return = null;
-		this.sibling = null;
-		this.child = null;
-		this.index = 0;
+		this.return = null; // 指向父节点
+		this.sibling = null; // 兄弟节点
+		this.child = null; // 子节点
+		this.index = 0; // 多个子节点的索引
 
 		this.ref = null;
 
 		// 状态
-		this.pendingProps = pendingProps;
-		this.memoizedProps = null;
+		this.pendingProps = pendingProps; // 组件上的默认props
+		this.memoizedProps = null; // 最后确定的props
 		this.updateQueue = null;
 		this.memoizedState = null;
 
@@ -54,7 +60,7 @@ export class FiberNode {
 		// this.lanes = NoLanes;
 		// this.childLanes = NoLanes;
 
-		this.alternate = null;
+		this.alternate = null; // 双缓存节点
 	}
 }
 

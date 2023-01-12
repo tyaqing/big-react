@@ -10,6 +10,7 @@ import {
 	HostText
 } from './workTags';
 
+// 递归中的递
 export const beginWork = (workInProgress: FiberNode) => {
 	switch (workInProgress.tag) {
 		case HostRoot:

@@ -90,7 +90,7 @@ function commitRoot(root: FiberRootNode) {
 		root.current = finishedWork;
 	}
 }
-
+// 刷新栈帧: 重置 FiberRoot上的全局属性 和 `fiber树构造`循环过程中的全局变量
 function prepareFreshStack(root: FiberRootNode) {
 	workInProgress = createWorkInProgress(root.current, {});
 }
@@ -105,8 +105,10 @@ function performUnitOfWork(fiber: FiberNode) {
 	const next = beginWork(fiber);
 
 	if (next === null) {
+		//  完成递归的归
 		completeUnitOfWork(fiber);
 	} else {
+		// 更换指针
 		workInProgress = next;
 	}
 }
@@ -124,9 +126,11 @@ function completeUnitOfWork(fiber: FiberNode) {
 
 		const sibling = node.sibling;
 		if (sibling) {
+			// 兄弟节点
 			workInProgress = next;
 			return;
 		}
+		// 节点向上
 		node = node.return;
 		workInProgress = node;
 	} while (node !== null);
