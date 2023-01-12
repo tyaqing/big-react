@@ -48,8 +48,8 @@ export class FiberNode {
 		// 状态
 		this.pendingProps = pendingProps; // 组件上的默认props
 		this.memoizedProps = null; // 最后确定的props
-		this.updateQueue = null;
-		this.memoizedState = null;
+		this.updateQueue = null; // 更新队列
+		this.memoizedState = null; // 更新完成后的新state
 
 		// 副作用
 		this.flags = NoFlags;
@@ -64,13 +64,15 @@ export class FiberNode {
 	}
 }
 
+// CrateRoot()创建的Fiber根节点 也就是双缓存的根节点
 export class FiberRootNode {
-	container: Container;
-	current: FiberNode;
-	finishedWork: FiberNode | null;
+	container: Container; //挂载的DOM节点
+	current: FiberNode; // 当前渲染的
+	finishedWork: FiberNode | null; // 更新完成后的HostRootFiber
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
 		this.current = hostRootFiber;
+		// 将自己挂载到传入的FiberNode上
 		hostRootFiber.stateNode = this;
 		this.finishedWork = null;
 	}
@@ -89,15 +91,22 @@ export function createFiberFromElement(element: ReactElement): FiberNode {
 	return fiber;
 }
 
+/**
+ * 创建正在工作的Fiber树
+ * @param {FiberNode} current
+ * @param {Props} pendingProps
+ * @return {FiberNode}
+ */
 export const createWorkInProgress = (
 	current: FiberNode,
 	pendingProps: Props
 ): FiberNode => {
+	// 从current复制一份
 	let wip = current.alternate;
-
+	// 首屏渲染时current.alternate为null 即 wip 为null
 	if (wip === null) {
-		// mount
-		wip = new FiberNode(current.tag, pendingProps, current.key);
+		// mount 大多数属性从current中复制
+		wip = new FiberNode(current.tag, pendingProps, current.key); // 这里与更新不同,直接新建了FiberNode节点
 		wip.type = current.type;
 		wip.stateNode = current.stateNode;
 
@@ -105,7 +114,9 @@ export const createWorkInProgress = (
 		current.alternate = wip;
 	} else {
 		// update
-		wip.pendingProps = pendingProps;
+		wip.pendingProps = pendingProps; // 挂载默认Props
+		//TODO 有疑问 更新时需要清除副作用
+		wip.tag = NoFlags;
 	}
 	wip.updateQueue = current.updateQueue;
 	wip.flags = current.flags;

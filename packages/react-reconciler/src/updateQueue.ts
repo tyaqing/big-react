@@ -1,15 +1,16 @@
 import { Action } from 'shared/ReactTypes';
 
-// State在这类是个泛型T
-export interface Update<State> {
-	action: Action<State>;
-}
-
+// 更新队列,为fiber上的一个属性
 export interface UpdateQueue<State> {
 	shared: {
 		// 环形链表
 		pending: Update<State> | null;
 	};
+}
+// State在这类是个泛型T
+// Update是UpdateQueue里面的一个子单元
+export interface Update<State> {
+	action: Action<State>;
 }
 
 // 创建
@@ -19,7 +20,11 @@ export const createUpdate = <State>(action: Action<State>) => {
 	};
 };
 
-// 插入
+/**
+ * 将更新子单元放入队列中
+ * @param {UpdateQueue<Action>} updateQueue
+ * @param {Update<Action>} update
+ */
 export const enqueueUpdate = <Action>(
 	updateQueue: UpdateQueue<Action>, // 被插入的Queue
 	update: Update<Action> // 某个update
@@ -30,6 +35,7 @@ export const enqueueUpdate = <Action>(
 // 初始化
 export const createUpdateQueue = <Action>() => {
 	const updateQueue: UpdateQueue<Action> = {
+		// 这里的share设计,可以让curren 和 workInProgress 共用同一个
 		shared: {
 			pending: null
 		}

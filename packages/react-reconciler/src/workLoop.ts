@@ -7,6 +7,11 @@ import { HostRoot } from './workTags';
 
 let workInProgress: FiberNode | null = null;
 
+/**
+ * 在Fiber中调度Update
+ * 连接updateContainer
+ * @param {FiberNode} fiber
+ */
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
 	const root = markUpdateLaneFromFiberToRoot(fiber);
 
@@ -16,9 +21,15 @@ export function scheduleUpdateOnFiber(fiber: FiberNode) {
 	ensureRootIsScheduled(root);
 }
 
+/**
+ * 获取传入Fiber节点的 双缓存根节点
+ * @param {FiberNode} fiber
+ * @return {any}
+ */
 function markUpdateLaneFromFiberToRoot(fiber: FiberNode) {
 	let node = fiber;
 	let parent = node.return;
+	// 遍历链表
 	while (parent !== null) {
 		node = parent;
 		parent = node.return;
@@ -37,7 +48,6 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 function performSyncWorkOnRoot(root: FiberRootNode) {
 	// 初始化操作
 	prepareFreshStack(root);
-
 	// render阶段具体操作
 	do {
 		try {
@@ -90,7 +100,11 @@ function commitRoot(root: FiberRootNode) {
 		root.current = finishedWork;
 	}
 }
-// 刷新栈帧: 重置 FiberRoot上的全局属性 和 `fiber树构造`循环过程中的全局变量
+
+/**
+ * 刷新栈帧: 重置 FiberRoot上的全局属性 和 `fiber树构造`循环过程中的全局变量
+ * @param {FiberRootNode} root
+ */
 function prepareFreshStack(root: FiberRootNode) {
 	workInProgress = createWorkInProgress(root.current, {});
 }
