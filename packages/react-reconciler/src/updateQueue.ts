@@ -1,12 +1,13 @@
 import { Action } from 'shared/ReactTypes';
-import { FiberNode } from './fiber';
 
+// State在这类是个泛型T
 export interface Update<State> {
 	action: Action<State>;
 }
 
 export interface UpdateQueue<State> {
 	shared: {
+		// 环形链表
 		pending: Update<State> | null;
 	};
 }
@@ -20,8 +21,8 @@ export const createUpdate = <State>(action: Action<State>) => {
 
 // 插入
 export const enqueueUpdate = <Action>(
-	updateQueue: UpdateQueue<Action>,
-	update: Update<Action>
+	updateQueue: UpdateQueue<Action>, // 被插入的Queue
+	update: Update<Action> // 某个update
 ) => {
 	updateQueue.shared.pending = update;
 };
@@ -37,25 +38,24 @@ export const createUpdateQueue = <Action>() => {
 };
 
 // 消费
-export const processUpdateQueue = <State>(fiber: FiberNode) => {
-	const updateQueue = fiber.updateQueue as UpdateQueue<State>;
-	let newState: State = fiber.memoizedState;
-
-	if (updateQueue !== null) {
-		const pending = updateQueue.shared.pending;
-		const pendingUpdate = pending;
-		updateQueue.shared.pending = null;
-
-		if (pendingUpdate !== null) {
-			const action = pendingUpdate.action;
-			if (action instanceof Function) {
-				newState = action(newState);
-			} else {
-				newState = action;
-			}
+export const processUpdateQueue = <State>(
+	baseState: State,
+	pendingState: Update<State> | null
+): { memoizedState: State } => {
+	// 返回的状态数据
+	const result: ReturnType<typeof processUpdateQueue<State>> = {
+		memoizedState: baseState
+	};
+	// 处理update
+	if (pendingState !== null) {
+		const action = pendingState.action;
+		if (action instanceof Function) {
+			// 比如baseState为 1 setState(x=>4x) memoizedState:4
+			result.memoizedState = action(baseState);
+		} else {
+			// 比如baseState为 1 setState(3) memoizedState:3
+			result.memoizedState = action;
 		}
-	} else {
-		console.error(fiber, ' processUpdateQueue时 updateQueue不存在');
 	}
-	fiber.memoizedState = newState;
+	return result;
 };
