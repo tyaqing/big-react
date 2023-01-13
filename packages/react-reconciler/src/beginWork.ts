@@ -11,18 +11,19 @@ import {
 } from './workTags';
 
 // 递归中的递
-export const beginWork = (workInProgress: FiberNode) => {
-	switch (workInProgress.tag) {
+export const beginWork = (wip: FiberNode) => {
+	switch (wip.tag) {
 		case HostRoot:
-			return updateHostRoot(workInProgress);
+			// 处理Fiber根节点
+			return updateHostRoot(wip);
 		case HostComponent:
-			return updateHostComponent(workInProgress);
+			return updateHostComponent(wip);
 		case HostText:
 			return null;
 		case FunctionComponent:
-			return updateFunctionComponent(workInProgress);
+			return updateFunctionComponent(wip);
 		default:
-			console.error('beginWork未处理的情况');
+			if (__DEV__) console.error('beginWork未处理的情况');
 			return null;
 	}
 };

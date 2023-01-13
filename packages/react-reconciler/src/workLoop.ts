@@ -54,7 +54,9 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 			workLoop();
 			break;
 		} catch (e) {
-			console.error('workLoop发生错误', e);
+			if (__DEV__) {
+				console.error('workLoop发生错误', e);
+			}
 			workInProgress = null;
 		}
 	} while (true);

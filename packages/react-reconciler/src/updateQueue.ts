@@ -33,8 +33,8 @@ export const enqueueUpdate = <Action>(
 };
 
 // 初始化
-export const createUpdateQueue = <Action>() => {
-	const updateQueue: UpdateQueue<Action> = {
+export const createUpdateQueue = <State>() => {
+	const updateQueue: UpdateQueue<State> = {
 		// 这里的share设计,可以让curren 和 workInProgress 共用同一个
 		shared: {
 			pending: null
