@@ -78,13 +78,22 @@ export class FiberRootNode {
 	}
 }
 
+/**
+ * 使用Element创建Fiber
+ * @param {ReactElement} element
+ * @return {FiberNode}
+ */
 export function createFiberFromElement(element: ReactElement): FiberNode {
 	const { type, key, props } = element;
+	// 默认设置为函数式组件
 	let fiberTag: WorkTag = FunctionComponent;
-
+	// <div/> type: 'div'
 	if (typeof type === 'string') {
 		fiberTag = HostComponent;
+	} else if (typeof type !== 'function' && __DEV__) {
+		console.warn('未定义的type类型');
 	}
+	// 创建Fiber
 	const fiber = new FiberNode(fiberTag, props, key);
 	fiber.type = type;
 
