@@ -68,40 +68,8 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 	const finishedWork = root.current.alternate;
 	// 将完成的wip节点挂载到current的finishedWork属性上
 	root.finishedWork = finishedWork;
-
-	// commit阶段操作
+	//
 	commitRoot(root);
-}
-
-function commitRoot(root: FiberRootNode) {
-	const finishedWork = root.finishedWork;
-
-	if (finishedWork === null) {
-		return;
-	}
-	// 重置
-	root.finishedWork = null;
-
-	const subtreeHasEffect =
-		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;
-	const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
-
-	if (subtreeHasEffect || rootHasEffect) {
-		// 有副作用要执行
-
-		// 阶段1/3:beforeMutation
-
-		// 阶段2/3:Mutation
-		commitMutationEffects(finishedWork);
-
-		// Fiber Tree切换
-		root.current = finishedWork;
-
-		// 阶段3:Layout
-	} else {
-		// Fiber Tree切换
-		root.current = finishedWork;
-	}
 }
 
 /**

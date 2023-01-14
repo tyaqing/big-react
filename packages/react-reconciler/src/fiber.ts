@@ -53,7 +53,7 @@ export class FiberNode {
 
 		// 副作用
 		this.flags = NoFlags;
-		this.subtreeFlags = NoFlags;
+		this.subtreeFlags = NoFlags; // 子树的flag
 		// this.deletions = null;
 
 		// 调度
@@ -126,6 +126,7 @@ export const createWorkInProgress = (
 		wip.pendingProps = pendingProps; // 挂载默认Props
 		//TODO 有疑问 更新时需要清除副作用
 		wip.tag = NoFlags;
+		wip.subtreeFlags = NoFlags;
 	}
 	wip.updateQueue = current.updateQueue;
 	wip.flags = current.flags;

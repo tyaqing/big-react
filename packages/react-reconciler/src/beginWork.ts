@@ -30,8 +30,8 @@ export const beginWork = (wip: FiberNode) => {
 			return updateFunctionComponent(wip);
 		default:
 			if (__DEV__) console.error('beginWork未处理的情况');
-			return null;
 	}
+	return null;
 };
 
 function updateFunctionComponent(workInProgress: FiberNode) {

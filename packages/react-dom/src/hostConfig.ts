@@ -2,16 +2,16 @@ export type Container = Element | Document;
 export type Instance = Element;
 export type TextInstance = Text;
 
-export const createInstance = (type: string) => {
-	return document.createElement(type);
+export const createInstance = (...args: any) => {
+	return {} as any;
 };
 
-export const createTextInstance = (content: string) => {
-	return document.createTextNode(content);
+export const createTextInstance = (...args: any) => {
+	return {} as any;
 };
 
-export const appendInitialChild = (parent: Instance, child: Instance) => {
-	parent.appendChild(child);
+export const appendInitialChild = (...args: any) => {
+	return {} as any;
 };
 
 export const appendChildToContainer = (
