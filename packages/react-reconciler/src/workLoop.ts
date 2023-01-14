@@ -1,9 +1,9 @@
 import { beginWork } from './beginWork';
-import { commitMutationEffects } from './commitWork';
 import { completeWork } from './completeWork';
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber';
-import { MutationMask, NoFlags } from './fiberFlags';
 import { HostRoot } from './workTags';
+import { __decorate } from 'tslib';
+import { MutationMask, NoFlags } from './fiberFlags';
 
 let workInProgress: FiberNode | null = null;
 
@@ -72,6 +72,34 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 	commitRoot(root);
 }
 
+function workLoop() {
+	while (workInProgress !== null) {
+		performUnitOfWork(workInProgress);
+	}
+}
+
+function commitRoot(root: FiberRootNode) {
+	const finishedWork = root.finishedWork;
+	// 不存在就不执行
+	if (finishedWork === null) return;
+	if (__DEV__) console.warn('commit阶段开始', finishedWork);
+	// 重置finishedWork
+	root.finishedWork = null;
+	// 判断是否存在3个阶段需要执行的操作
+	const subtreeHasEffect =
+		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;
+	const flagsHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
+	if (subtreeHasEffect || flagsHasEffect) {
+		/* beforeMutation */
+
+		/* mutation  比如执行Placement */
+		// 切换fiber树
+		root.current = finishedWork;
+
+		/* layout */
+	}
+}
+
 /**
  * 刷新栈帧: 重置 FiberRoot上的全局属性 和 `fiber树构造`循环过程中的全局变量
  * @param {FiberRootNode} root
@@ -83,11 +111,6 @@ function prepareFreshStack(root: FiberRootNode) {
 /**
  * 工作循环,递归遍历workInProgress
  */
-function workLoop() {
-	while (workInProgress !== null) {
-		performUnitOfWork(workInProgress);
-	}
-}
 
 function performUnitOfWork(fiber: FiberNode) {
 	// 递阶段

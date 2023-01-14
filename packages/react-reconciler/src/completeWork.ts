@@ -3,15 +3,9 @@ import { NoFlags } from './fiberFlags';
 import {
 	appendInitialChild,
 	createInstance,
-	createTextInstance,
-	Instance
+	createTextInstance
 } from 'hostConfig';
-import {
-	FunctionComponent,
-	HostComponent,
-	HostRoot,
-	HostText
-} from './workTags';
+import { HostComponent, HostRoot, HostText } from './workTags';
 
 /**
  * 对于Host类型的FiberNode :构建离屏DOM树
@@ -56,6 +50,7 @@ export const completeWork = (wip: FiberNode) => {
 		default:
 			if (__DEV__) console.warn('未处理的completeWork', wip);
 	}
+	return null;
 };
 
 /**
