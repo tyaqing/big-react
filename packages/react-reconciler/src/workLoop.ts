@@ -2,8 +2,8 @@ import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber';
 import { HostRoot } from './workTags';
-import { __decorate } from 'tslib';
 import { MutationMask, NoFlags } from './fiberFlags';
+import { commitMutationEffects } from './commitWork';
 
 let workInProgress: FiberNode | null = null;
 
@@ -93,6 +93,7 @@ function commitRoot(root: FiberRootNode) {
 		/* beforeMutation */
 
 		/* mutation  比如执行Placement */
+		commitMutationEffects(finishedWork);
 		// 切换fiber树
 		root.current = finishedWork;
 

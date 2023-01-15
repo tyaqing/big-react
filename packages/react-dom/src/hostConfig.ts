@@ -14,9 +14,6 @@ export const appendInitialChild = (...args: any) => {
 	return {} as any;
 };
 
-export const appendChildToContainer = (
-	child: Instance,
-	container: Container
-) => {
-	container.appendChild(child);
+export const appendChildToContainer = (...args: any) => {
+	return {} as any;
 };
