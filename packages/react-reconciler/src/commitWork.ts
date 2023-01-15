@@ -59,14 +59,16 @@ const commitPlacement = (finishedWork: FiberNode) => {
 	// parent DOM
 	const hostParent = getHostParent(finishedWork);
 	// finishedWork 的dom append 到 parent DOM中
-	appendPlacementNodeIntoContainer(finishedWork, hostParent);
+	if (hostParent !== null) {
+		appendPlacementNodeIntoContainer(finishedWork, hostParent);
+	}
 };
 
 /**
  * 获取宿主环境的parent节点
  * @param {FiberNode} fiber
  */
-function getHostParent(fiber: FiberNode) {
+function getHostParent(fiber: FiberNode): Container | null {
 	let parent = fiber.return;
 	while (parent) {
 		const parentTag = parent.tag;
@@ -80,6 +82,7 @@ function getHostParent(fiber: FiberNode) {
 		parent = parent.return;
 	}
 	if (__DEV__) console.warn('未找到host parent', fiber);
+	return null;
 }
 
 /**
@@ -93,7 +96,7 @@ function appendPlacementNodeIntoContainer(
 ) {
 	// 只处理这两种tag,因为HostRoot不是真实dom节点
 	if (finishedWork.tag === HostComponent || finishedWork.tag === HostText) {
-		appendChildToContainer(finishedWork.stateNode, hostParent);
+		appendChildToContainer(hostParent, finishedWork.stateNode);
 		return;
 	}
 	// 向下遍历

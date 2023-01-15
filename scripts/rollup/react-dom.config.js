@@ -19,7 +19,6 @@ const basePlugins = getBaseRollupPlugins({
 		}
 	}
 });
-
 // include: ['react-dom.d.ts']
 
 export default [
@@ -34,13 +33,13 @@ export default [
 		external: [...Object.keys(peerDependencies), 'scheduler'],
 		output: [
 			{
-				file: `${pkgDistPath}/client.js`,
-				name: 'client.js',
+				file: `${pkgDistPath}/index.js`,
+				name: 'index.js',
 				format: 'umd'
 			},
 			{
-				file: `${pkgDistPath}/index.js`,
-				name: 'index.js',
+				file: `${pkgDistPath}/client.js`,
+				name: 'client.js',
 				format: 'umd'
 			}
 		],

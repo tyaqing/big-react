@@ -3,7 +3,8 @@ import { NoFlags } from './fiberFlags';
 import {
 	appendInitialChild,
 	createInstance,
-	createTextInstance
+	createTextInstance,
+	Instance
 } from 'hostConfig';
 import { HostComponent, HostRoot, HostText } from './workTags';
 
@@ -27,6 +28,8 @@ export const completeWork = (wip: FiberNode) => {
 				// mount
 				// 1.构建DOM
 				const instance = createInstance(wip.type, newProps);
+				// 2.将DOM插入到DOM树中
+				appendAllChildren(instance, wip);
 				wip.stateNode = instance;
 			}
 			bubbleProperites(wip);
@@ -38,8 +41,7 @@ export const completeWork = (wip: FiberNode) => {
 				// mount
 				// 1.构建DOM
 				const instance = createTextInstance(newProps.content);
-				// 2.将DOM插入到DOM树中
-				appendAllChildren(instance, wip);
+
 				wip.stateNode = instance;
 			}
 			bubbleProperites(wip);
@@ -59,7 +61,7 @@ export const completeWork = (wip: FiberNode) => {
  * @param {FiberNode} parent
  * @param {FiberNode} wip
  */
-function appendAllChildren(parent: FiberNode, wip: FiberNode) {
+function appendAllChildren(parent: Instance, wip: FiberNode) {
 	// 获取当前指针的子Fiber
 	let node = wip.child;
 	// 在 <div> <A/> <A/> </div> 这种情况下  node有可能是多个 因此需要递归node的sibling

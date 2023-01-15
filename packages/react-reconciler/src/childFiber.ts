@@ -62,7 +62,7 @@ function ChildReconciler(shouldTrackEffect: boolean) {
 		// 前：abc 后：a  删除bc
 		// 前：a 后：b 删除b、创建a
 		// 前：无 后：a 创建a
-		// currentFirstChild;
+		console.log(currentFirstChild);
 		// 根据Element创建Fiber节点
 		const fiber = createFiberFromElement(element);
 		// 设置新节点的父节点
@@ -84,7 +84,7 @@ function ChildReconciler(shouldTrackEffect: boolean) {
 		currentFirstChild: FiberNode | null,
 		content: string | number
 	) {
-		// currentFirstChild;
+		console.log(currentFirstChild);
 		// 创建Fiber节点
 		const fiber = new FiberNode(HostText, { content }, null);
 		fiber.return = returnFiber;

@@ -125,7 +125,7 @@ export const createWorkInProgress = (
 		// update
 		wip.pendingProps = pendingProps; // 挂载默认Props
 		//TODO 有疑问 更新时需要清除副作用
-		wip.tag = NoFlags;
+		wip.flags = NoFlags;
 		wip.subtreeFlags = NoFlags;
 	}
 	wip.updateQueue = current.updateQueue;
