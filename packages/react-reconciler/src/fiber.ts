@@ -1,4 +1,4 @@
-import { Key, Props, ReactElement, Ref } from 'shared/ReactTypes';
+import { Key, Props, ReactElementType, Ref } from 'shared/ReactTypes';
 import { Flags, NoFlags } from './fiberFlags';
 import { Container } from 'hostConfig';
 import { FunctionComponent, HostComponent, WorkTag } from './workTags';
@@ -80,10 +80,10 @@ export class FiberRootNode {
 
 /**
  * 使用Element创建Fiber
- * @param {ReactElement} element
+ * @param {ReactElementType} element
  * @return {FiberNode}
  */
-export function createFiberFromElement(element: ReactElement): FiberNode {
+export function createFiberFromElement(element: ReactElementType): FiberNode {
 	const { type, key, props } = element;
 	// 默认设置为函数式组件
 	let fiberTag: WorkTag = FunctionComponent;

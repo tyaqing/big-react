@@ -9,6 +9,7 @@ export default defineConfig({
 		react(),
 		replace({
 			__LOG__: true,
+			__DEV__: true,
 			preventAssignment: true
 		})
 	],

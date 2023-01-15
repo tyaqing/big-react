@@ -1,14 +1,8 @@
-import { ReactElement } from 'shared/ReactTypes';
+import { ReactElementType } from 'shared/ReactTypes';
 import { mountChildFibers, reconcileChildFibers } from './childFiber';
 import { FiberNode } from './fiber';
-import { renderWithHooks } from './fiberHooks';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
-import {
-	FunctionComponent,
-	HostComponent,
-	HostRoot,
-	HostText
-} from './workTags';
+import { HostComponent, HostRoot, HostText } from './workTags';
 
 /**
  * 递归中的递
@@ -26,19 +20,11 @@ export const beginWork = (wip: FiberNode) => {
 		case HostText:
 			// 无子节点
 			return null;
-		case FunctionComponent:
-			return updateFunctionComponent(wip);
 		default:
 			if (__DEV__) console.error('beginWork未处理的情况');
 	}
 	return null;
 };
-
-function updateFunctionComponent(workInProgress: FiberNode) {
-	const nextChildren = renderWithHooks(workInProgress);
-	reconcileChildren(workInProgress, nextChildren);
-	return workInProgress.child;
-}
 
 /**
  * 更新Fiber根节点  注意! 这里只作为了一个连接点 即 FiberRoot -> HostRoot -> <App/>
@@ -86,9 +72,9 @@ function updateHostComponent(workInProgress: FiberNode) {
 /**
  * 调度子节点
  * @param {FiberNode} wip
- * @param {ReactElement} children
+ * @param {ReactElementType} children
  */
-function reconcileChildren(wip: FiberNode, children?: ReactElement) {
+function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
 	// 获取当前显示节点
 	const current = wip.alternate;
 	// 这里有个优化策略,

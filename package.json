@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"scripts": {
 		"build:dev": "rm -rf dist && rollup --config scripts/rollup/dev.config.js",
-		"demo": "vite serve demos/v11 --config demos/vite.config.js --force",
+		"demo": "vite serve demos/v6 --config demos/vite.config.js --force",
 		"lint": "eslint --ext .ts,.jsx,.tsx --fix --quiet ./packages",
 		"test": "jest"
 	},
@@ -35,6 +35,7 @@
 		"jest": "^28.1.2",
 		"jest-config": "^28.1.2",
 		"jest-environment-jsdom": "^28.1.2",
+		"jest-react": "^0.14.0",
 		"lint-staged": "^13.0.2",
 		"prettier": "^2.7.1",
 		"rollup": "^2.75.6",
@@ -42,10 +43,11 @@
 		"rollup-plugin-typescript2": "^0.32.1",
 		"tslib": "^2.4.0",
 		"typescript": "^4.7.3",
-		"vite": "^3.0.0",
-		"jest-react": "^0.14.0"
+		"vite": "^3.0.0"
 	},
 	"dependencies": {
+		"react": "^1.0.0",
+		"react-dom": "^1.0.0",
 		"scheduler": "^0.23.0"
 	}
 }

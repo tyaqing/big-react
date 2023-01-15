@@ -1,4 +1,4 @@
-import { ReactElement } from 'shared/ReactTypes';
+import { ReactElementType } from 'shared/ReactTypes';
 import { FiberNode, FiberRootNode } from './fiber';
 import { Container } from 'hostConfig';
 import { HostRoot } from './workTags';
@@ -22,22 +22,28 @@ export function createContainer(container: Container) {
 	// 创建双缓存根节点
 	const root = new FiberRootNode(container, hostRootFiber);
 	// 创建更新链表
-	hostRootFiber.updateQueue = createUpdateQueue<ReactElement>();
+	hostRootFiber.updateQueue = createUpdateQueue<ReactElementType>();
 	return root;
 }
 
 /**
  * ReactDOM.createRoot(Container).render(ReactElement) 后执行的方法
- * @param {ReactElement} element
+ * @param {ReactElementType} element
  * @param {FiberRootNode} root 从createRoot()中传入的双缓存根节点
  */
-export function updateContainer(element: ReactElement, root: FiberRootNode) {
+export function updateContainer(
+	element: ReactElementType,
+	root: FiberRootNode
+) {
 	// 从FiberRoot中获取当前渲染Fiber树
 	const hostRootFiber = root.current;
 	// 创建一个更新单元
-	const update = createUpdate<ReactElement>(element);
+	const update = createUpdate<ReactElementType>(element);
 	// 更新入队到当前渲染树的updateQueue中
-	enqueueUpdate(hostRootFiber.updateQueue as UpdateQueue<ReactElement>, update);
+	enqueueUpdate(
+		hostRootFiber.updateQueue as UpdateQueue<ReactElementType>,
+		update
+	);
 	// 去调度刚创建好的RootFiber
 	scheduleUpdateOnFiber(hostRootFiber);
 }

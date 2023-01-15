@@ -1,5 +1,5 @@
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
-import { ReactElement } from 'shared/ReactTypes';
+import { ReactElementType } from 'shared/ReactTypes';
 import { createFiberFromElement, FiberNode } from './fiber';
 import { Placement } from './fiberFlags';
 import { HostText } from './workTags';
@@ -7,7 +7,7 @@ import { HostText } from './workTags';
 /**
  * 创建子Fiber节点
  * @param {boolean} shouldTrackEffect 是否追踪副作用 mount时启用优化
- * @return {(returnFiber: FiberNode, currentFirstChild: (FiberNode | null), newChild?: ReactElement) => (FiberNode | null)}
+ * @return {(returnFiber: FiberNode, currentFirstChild: (FiberNode | null), newChild?: ReactElementType) => (FiberNode | null)}
  * @constructor
  */
 function ChildReconciler(shouldTrackEffect: boolean) {
@@ -15,13 +15,13 @@ function ChildReconciler(shouldTrackEffect: boolean) {
 	 * 根据节点类型,调度不同的节点
 	 * @param {FiberNode} returnFiber 父节点
 	 * @param {FiberNode | null} currentFirstChild 当前节点
-	 * @param {ReactElement} newChild 子节点
+	 * @param {ReactElementType} newChild 子节点
 	 * @return {FiberNode | null}
 	 */
 	function reconcileChildFibers(
 		returnFiber: FiberNode,
 		currentFirstChild: FiberNode | null,
-		newChild?: ReactElement | number | string
+		newChild?: ReactElementType | number | string
 	): FiberNode | null {
 		// newChild 为 JSX
 		// currentFirstChild 为 fiberNode
@@ -57,7 +57,7 @@ function ChildReconciler(shouldTrackEffect: boolean) {
 	function reconcileSingleElement(
 		returnFiber: FiberNode,
 		currentFirstChild: FiberNode | null,
-		element: ReactElement
+		element: ReactElementType
 	) {
 		// 前：abc 后：a  删除bc
 		// 前：a 后：b 删除b、创建a
