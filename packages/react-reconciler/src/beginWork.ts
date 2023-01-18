@@ -2,7 +2,13 @@ import { ReactElementType } from 'shared/ReactTypes';
 import { mountChildFibers, reconcileChildFibers } from './childFiber';
 import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
+import { renderWithHooks } from './fiberHooks';
 
 /**
  * 递归中的递
@@ -20,11 +26,22 @@ export const beginWork = (wip: FiberNode) => {
 		case HostText:
 			// 无子节点
 			return null;
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		default:
 			if (__DEV__) console.error('beginWork未处理的情况');
 	}
 	return null;
 };
+
+function updateFunctionComponent(wip: FiberNode) {
+	// 执行函数获得组件
+	const nextChildren = renderWithHooks(wip);
+	// 调度子节点
+	reconcileChildren(wip, nextChildren);
+	// 返回子节点
+	return wip.child;
+}
 
 /**
  * 更新Fiber根节点  注意! 这里只作为了一个连接点 即 FiberRoot -> HostRoot -> <App/>

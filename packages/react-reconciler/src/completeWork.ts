@@ -6,7 +6,12 @@ import {
 	createTextInstance,
 	Instance
 } from 'hostConfig';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 
 /**
  * 对于Host类型的FiberNode :构建离屏DOM树
@@ -41,12 +46,14 @@ export const completeWork = (wip: FiberNode) => {
 				// mount
 				// 1.构建DOM
 				const instance = createTextInstance(newProps.content);
-
 				wip.stateNode = instance;
 			}
 			bubbleProperites(wip);
 			return null;
 		case HostRoot:
+			bubbleProperites(wip);
+			return null;
+		case FunctionComponent:
 			bubbleProperites(wip);
 			return null;
 		default:
