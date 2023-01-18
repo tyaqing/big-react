@@ -1,11 +1,15 @@
 {
   "name": "react-reconciler",
   "version": "1.0.0",
-  "description": "React 协调器",
+  "description": "React协调器",
   "module": "index.ts",
   "dependencies": {
-    "shared": "workspace:*",
-    "react-dom": "workspace:*",
-    "react": "workspace:*"
-  }
+    "shared": "workspace: *"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
