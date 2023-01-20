@@ -1,4 +1,5 @@
 import { Action } from 'shared/ReactTypes';
+import { Dispatch } from 'react/src/currentDispatcher';
 
 // 更新队列,为fiber上的一个属性
 export interface UpdateQueue<State> {
@@ -6,6 +7,7 @@ export interface UpdateQueue<State> {
 		// 环形链表
 		pending: Update<State> | null;
 	};
+	dispatch: Dispatch<State> | null;
 }
 // State在这类是个泛型T
 // Update是UpdateQueue里面的一个子单元
@@ -38,7 +40,8 @@ export const createUpdateQueue = <State>() => {
 		// 这里的share设计,可以让curren 和 workInProgress 共用同一个
 		shared: {
 			pending: null
-		}
+		},
+		dispatch: null
 	};
 	return updateQueue;
 };

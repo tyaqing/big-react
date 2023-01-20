@@ -1,7 +1,14 @@
 import { FiberNode } from './fiber';
 import internals from 'shared/internals';
-import { Dispatcher } from 'react/src/currentDispatcher';
-import { Dispatch } from 'react';
+import { Dispatcher, Dispatch } from 'react/src/currentDispatcher';
+import {
+	createUpdate,
+	createUpdateQueue,
+	enqueueUpdate,
+	UpdateQueue
+} from './updateQueue';
+import { Action } from 'shared/ReactTypes';
+import { scheduleUpdateOnFiber } from './workLoop';
 
 const { currentDispatcher } = internals;
 // 当前正在渲染的Fiber节点
@@ -43,16 +50,47 @@ export function renderWithHooks(wip: FiberNode) {
 }
 
 const HooksDispatcherOnMount: Dispatcher = {
+	// @ts-ignore
 	useState: mountState
 };
 // 初次渲染处理State
 function mountState<State>(
-	initiaState: () => State | State
-): State | Dispatch<State> {
+	initialState: (() => State) | State
+): [State | Dispatch<State>] {
 	// 找到当前useState对应的hook数据
 	const hook = mountWorkInProgressHook();
+	let memoizedState: State;
+	// 处理返回的State
+	if (initialState instanceof Function) {
+		memoizedState = initialState();
+	} else memoizedState = initialState;
+	// 创建更新队列
+	const queue = createUpdateQueue();
+	hook.updateQueue = queue;
+	// @ts-ignore 使用bind的原因是 useState结构出来的setState()可以赋值给window使用,这样不加bind回失去上下文
+	const dispatch = dispatchSetState.bind(null, currentlyRenderingFiber, queue);
+	queue.dispatch = dispatch;
+	// @ts-ignore
+	return [memoizedState, dispatch];
 }
 
+function dispatchSetState<State>(
+	fiber: FiberNode,
+	updateQueue: UpdateQueue<State>,
+	action: Action<State>
+) {
+	// 创建更新任务
+	const update = createUpdate(action);
+	// 入队
+	enqueueUpdate(updateQueue, update);
+	// 调度更新任务
+	scheduleUpdateOnFiber(fiber);
+}
+
+/**
+ * 创建hook
+ * @return {Hook}
+ */
 function mountWorkInProgressHook(): Hook {
 	const hook: Hook = {
 		memoizedState: null,
